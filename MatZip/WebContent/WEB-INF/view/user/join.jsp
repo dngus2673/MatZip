@@ -16,12 +16,14 @@
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script>
+	// axios.post는 post방식으로 보냄
+	/* get방식 => params: {'user_id': user_id}
+	*/
 		function chkId() {
 			const user_id = frm.user_id.value
 			axios.get('/user/ajaxIdChk', {
-				params: {
-					user_id
-				}
+				params: { 
+					'user_id': user_id }
 			}).then(function(res) {
 				console.log(res)
 				if(res.data.result == 2){ // 아이디 없음

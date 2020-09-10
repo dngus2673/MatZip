@@ -8,6 +8,6 @@
 			<div><input type="password" name="user_pw" placeholder="비밀번호"></div>
 			<div><input type="submit" value="login"></div>
 		</form>
-		<a href="join">Join</a>
+		<div class="linkJoin"><a href="join">Join</a></div>
 	</div>
 </div>

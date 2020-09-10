@@ -28,6 +28,14 @@ public class Container extends HttpServlet {
 	}
 	
 	private void proc(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+		
+		String routerCheckResult = LoginChkInterceptor.routerChk(request);
+		if(routerCheckResult != null) {
+			response.sendRedirect(routerCheckResult);
+			return;
+		}
+		
 		// 보통 템플릿 파일명
 		String temp = mapper.nav(request);
 		
@@ -48,12 +56,13 @@ public class Container extends HttpServlet {
 			if("redirect".equals(prefix)) {
 				response.sendRedirect(value);
 				return;
-			}else if("ajax".equals(prefix)) {
+				
+			} else if("ajax".equals(prefix)) {
 				response.setCharacterEncoding("UTF-8");
 				response.setContentType("application/json");
-				PrintWriter out = response.getWriter();
 				
-				System.out.println("value : " + value);
+				PrintWriter out = response.getWriter();
+				//System.out.println("value : " + value);
 				out.print(value);
 				return;
 			}

@@ -9,6 +9,7 @@
 </head>
 <body>
 	<div id="container">
+		
 		<jsp:include page="/WEB-INF/view/${view}.jsp"></jsp:include>
 	</div>
 </body>

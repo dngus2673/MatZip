@@ -1,5 +1,5 @@
 package com.koreait.matzip;
 
-public class AjaxController {
-	
+public class CommonUtils {
+
 }
