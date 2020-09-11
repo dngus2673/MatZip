@@ -17,6 +17,7 @@ public class SecurityUtils {
 	}
 	
 	public static boolean isLogout(HttpServletRequest request) {
+		HttpSession hs = request.getSession();
 		return getLoginUser(request) == null;
 	}
 	

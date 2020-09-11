@@ -27,9 +27,9 @@ public class HandlerMapper {
 			return "405"; //Error
 		}
 		
-		if("ajax".equals(uriArr[1])) {
-			return "ajax";
-		}
+//		if("ajax".equals(uriArr[1])) {
+//			return "ajax";
+//		}
 		
 		switch(uriArr[1]) {
 		case ViewRef.URI_USER:	//user
@@ -51,6 +51,12 @@ public class HandlerMapper {
 			switch(uriArr[2]) {
 			case "restMap":
 				return restCon.restMap(request);
+			case "restReg":
+				return restCon.restReg(request);
+			case "restRegProc":
+				return restCon.restRegProc(request);
+			case "ajaxGetList":
+				return restCon.ajaxGetList(request);
 			}
 		}
 		return "404"; // NotFound
