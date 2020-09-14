@@ -50,8 +50,8 @@ public class Container extends HttpServlet {
 			String prefix = temp.substring(0, temp.indexOf(":"));
 			String value = temp.substring(temp.indexOf(":") + 1);
 			
-			System.out.println("prefix : " + prefix);
-			System.out.println("value : " + value);
+			//System.out.println("prefix : " + prefix);
+			//System.out.println("value : " + value);
 			
 			if("redirect".equals(prefix)) {
 				response.sendRedirect(value);

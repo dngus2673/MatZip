@@ -35,6 +35,51 @@ public class RestaurantDAO {
 			
 		});
 	}
+	
+	public RestaurantDomain selRestaurant(RestaurantVO param) {
+		
+		RestaurantDomain rvo = new RestaurantDomain();
+		
+		String sql = " SELECT A.i_rest, A.nm, A.addr, A.i_user, A.hits as cntHits, "
+				+ " B.val AS cd_category_nm, ifnull(C.cnt, 0) AS cntFavorite "
+				+ " FROM t_restaurant A "
+				+ " LEFT JOIN c_code_d B "
+				+ " ON A.cd_category = B.cd "
+				+ " AND B.i_m = 1 "
+				+ " LEFT JOIN ( "
+					+ " SELECT i_rest, COUNT(i_rest) AS cnt "
+					+ " FROM t_user_favorite "
+					+ "	WHERE i_rest = ? "
+					+ " GROUP BY i_rest "
+					+ " ) C "
+				+ " ON A.i_rest = C.i_rest "
+				+ " WHERE A.i_rest = ? ";
+		
+		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
+
+			@Override
+			public void prepared(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, param.getI_rest());
+				ps.setInt(2, param.getI_rest());
+			}
+
+			@Override
+			public void executeQuery(ResultSet rs) throws SQLException {
+				if(rs.next()) {
+					rvo.setI_rest(param.getI_rest());
+					rvo.setNm(rs.getNString("nm"));
+					rvo.setAddr(rs.getNString("addr"));
+					rvo.setI_user(rs.getInt("i_user"));
+					rvo.setCntHits(rs.getInt("cntHits"));
+					rvo.setCd_category_nm(rs.getNString("cd_category_nm"));
+					rvo.setCntFavorite(rs.getInt("cntFavorite"));
+				}
+				
+			}
+		});
+		return rvo;
+	}
+	
 	public List<RestaurantDomain> selRestList(){
 		List<RestaurantDomain> list = new ArrayList();
 		
@@ -43,10 +88,7 @@ public class RestaurantDAO {
 		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
-			public void prepared(PreparedStatement ps) throws SQLException {
-				// TODO Auto-generated method stub
-				
-			}
+			public void prepared(PreparedStatement ps) throws SQLException { }
 
 			@Override
 			public void executeQuery(ResultSet rs) throws SQLException {
