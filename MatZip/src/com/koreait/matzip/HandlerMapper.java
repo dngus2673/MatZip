@@ -59,8 +59,10 @@ public class HandlerMapper {
 				return restCon.ajaxGetList(request);
 			case "restDetail":
 				return restCon.resDetail(request);
-			case "addRecMenusProc":
-				return restCon.addRecMenusProc(request);
+			case "addRecMenus":
+				return restCon.addRecMenus(request);
+			case "ajaxDelRecMenu":
+				return restCon.ajaxDelRecMenu(request);
 			}
 		}
 		return "404"; // NotFound

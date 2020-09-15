@@ -1,0 +1,33 @@
+@charset "UTF-8";
+.recMenuContainer {
+	width: 100%;
+	height: 230px;
+	overflow-x: scroll;
+	display: flex;
+	padding: 5px;
+}
+
+.recMenuContainer > .recMenuItem {
+	width: 150px;
+	height: 90px;
+	position: relative;
+}
+
+.recMenuContainer > .recMenuItem > .pic {
+	width: 100%;
+	height: 130px;
+}
+.recMenuContainer > .recMenuItem > .pic  > img{
+	width: 100%;
+}
+
+.recMenuContainer > .recMenuItem > .info {
+	width: 100%;
+	height: 30px;
+}
+.recMenuContainer > .recMenuItem > .delIcontainer {
+	cursor: pointer;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}

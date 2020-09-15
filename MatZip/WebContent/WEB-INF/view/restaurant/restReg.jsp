@@ -10,7 +10,7 @@
 			<div>
 				<input type="text" name="addr" placeholder="주소" onkeyup="changeAddr()" style="width: 250px;">
 				<button id="btn" type="button" onclick="getLatLng()">좌표 가져오기</button>
-				<span id="resultGetLatLng" style="blue" class="material-icons"></span>
+				<span id="resultGetLatLng" style="color: blue;" class="material-icons"></span>
 			</div>
 			<input type="hidden" name="lat" value="0">
 			<input type="hidden" name="lng" value="0">
