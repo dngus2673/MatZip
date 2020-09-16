@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <style>
-.label { margin-bottom: 96px; }
+.label { margin-bottom: 96px; cursor: pointer; }
 .label * { display: inline-block;vertical-align: top; }
 .label .left { background: url("https://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_l.png") no-repeat;display: inline-block;height: 24px;overflow: hidden;vertical-align: top;width: 7px;}
 .label .center { background: url(https://t1.daumcdn.net/localimg/localimages/07/2011/map/storeview/tip_bg.png) repeat-x;display: inline-block;height: 24px;font-size: 12px;line-height: 24px;}
@@ -57,7 +57,12 @@
 			
 			var mPos = new kakao.maps.LatLng(item.lat, item.lng)
 			
-			var marker = new kakao.maps.CustomOverlay({
+			var marker = new kakao.maps.Marker({
+				position: mPos,
+			});
+			marker.setMap(map)
+
+			var customOverlay = new kakao.maps.CustomOverlay({
 				position: mPos,
 				content: content
 			});
@@ -66,7 +71,7 @@
 				console.log('marker click : ' + item.i_rest)
 				moveDetail(item.i_rest)
 			});
-			marker.setMap(map)
+			customOverlay.setMap(map)
 			
 		}
 		

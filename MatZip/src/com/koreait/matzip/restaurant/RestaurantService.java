@@ -5,9 +5,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileItemFactory;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
 import com.google.gson.Gson;
 import com.koreait.matzip.CommonUtils;
@@ -37,8 +45,41 @@ public class RestaurantService {
 	public RestaurantDomain getRest(RestaurantVO param) {
 		return restdao.selRestaurant(param);
 	}
+	public int addMenus(HttpServletRequest request) { // 메뉴
+				
+		String savePath = request.getServletContext().getRealPath("/res/img/restaurant"); // 상대 주소 지정
+		String tempPath = savePath + "/temp";//임시  // 위치의 절대주소값을 줌	, \는 윈도우에서만 가능	
+		FileUtils.makeFolder(tempPath);
+		
+		int i_rest = CommonUtils.getIntParameter("i_rest", request);
 	
-	public int addRecMenus(HttpServletRequest request) {
+		String targetPath = request.getServletContext().getRealPath("/res/img/restaurant/" + i_rest + "/menu");
+		FileUtils.makeFolder(targetPath);
+		
+		RestaurantRecommendMenuVO param = new RestaurantRecommendMenuVO();
+		param.setI_rest(i_rest);
+		
+		try {
+			for(Part part : request.getParts()) {
+				String fileNm = part.getSubmittedFileName();
+				System.out.println("fileNm : " + fileNm);
+				
+				if(fileNm != null) {
+					String ext = FileUtils.getExt(fileNm);
+					String saveFileNm = UUID.randomUUID() + ext;
+					part.write(tempPath + "/" + fileNm); //파일 저장
+					//part.write(tempPath + File.separator + fileNm); //가능
+					
+					param.setMenu_pic(saveFileNm);
+					restdao.insMenu(param);
+				}
+				
+			}
+		}catch(Exception e) { e.printStackTrace(); }
+		return i_rest;
+	}
+	
+	public int addRecMenus(HttpServletRequest request) { // 추천 메뉴
 		
 		String savePath = request.getServletContext().getRealPath("/res/img/restaurant"); // 상대 주소 지정
 		String tempPath = savePath + "/temp"; // 위치의 절대주소값을 줌	, \는 윈도우에서만 가능	
@@ -112,6 +153,9 @@ public class RestaurantService {
 	}
 	public List<RestaurantRecommendMenuVO> getRecommendMenuList(int i_rest){
 		return restdao.selRecommendMenuList(i_rest);
+	}
+	public List<RestaurantRecommendMenuVO> getMenuList(int i_rest){
+		return restdao.selMenuList(i_rest);
 	}
 	
 	public int delRecMenu(RestaurantRecommendMenuVO param) {

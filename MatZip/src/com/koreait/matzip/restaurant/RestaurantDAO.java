@@ -27,13 +27,30 @@ public class RestaurantDAO {
 			@Override
 			public void update(PreparedStatement ps) throws SQLException {
 				ps.setInt(1, param.getI_user());
-				ps.setNString(2, param.getNm());
-				ps.setNString(3, param.getAddr());
+				ps.setString(2, param.getNm());
+				ps.setString(3, param.getAddr());
 				ps.setDouble(4, param.getLat());
 				ps.setDouble(5, param.getLng());
 				ps.setInt(6, param.getCd_category());
 			}
 			
+		});
+	}
+	
+	public int insMenu(RestaurantRecommendMenuVO param) {
+		String sql = " INSERT INTO t_restaurant_menu "
+				+ " (seq, i_rest, menu_pic) "
+				+ " SELECT IFNULL(MAX(seq), 0) + 1, ?, ? "
+				+ " FROM t_restaurant_menu "
+				+ " WHERE i_rest = ? ";
+		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
+
+			@Override
+			public void update(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, param.getI_rest());
+				ps.setString(2, param.getMenu_pic());
+				ps.setInt(3, param.getI_rest());
+			}
 		});
 	}
 	
@@ -59,15 +76,20 @@ public class RestaurantDAO {
 	
 	public int delRecommendMenu(RestaurantRecommendMenuVO param) {
 		
-		String sql = " DELETE FROM t_restaurant_recommend_menu "
-				+ " WHERE i_rest = ? AND seq = ?  ";
+		String sql = " DELETE A "
+				+ " FROM t_restaurant_recommend_menu A "
+				+ " INNER JOIN t_restaurant B "
+				+ " ON A.i_rest = B.i_rest "
+				+ " AND B.i_user = ? "
+				+ " WHERE A.i_rest = ? AND A.seq = ? ";
 		
 		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
 
 			@Override
 			public void update(PreparedStatement ps) throws SQLException {
-				ps.setInt(1, param.getI_rest());
-				ps.setInt(2, param.getSeq());
+				ps.setInt(1, param.getI_user());
+				ps.setInt(2, param.getI_rest());
+				ps.setInt(3, param.getSeq());
 			}
 		});
 	}
@@ -103,11 +125,11 @@ public class RestaurantDAO {
 			public void executeQuery(ResultSet rs) throws SQLException {
 				if(rs.next()) {
 					rvo.setI_rest(param.getI_rest());
-					rvo.setNm(rs.getNString("nm"));
-					rvo.setAddr(rs.getNString("addr"));
+					rvo.setNm(rs.getString("nm"));
+					rvo.setAddr(rs.getString("addr"));
 					rvo.setI_user(rs.getInt("i_user"));
 					rvo.setCntHits(rs.getInt("cntHits"));
-					rvo.setCd_category_nm(rs.getNString("cd_category_nm"));
+					rvo.setCd_category_nm(rs.getString("cd_category_nm"));
 					rvo.setCntFavorite(rs.getInt("cntFavorite"));
 				}
 				
@@ -146,6 +168,35 @@ public class RestaurantDAO {
 		return list;
 	}
 	
+	public List<RestaurantRecommendMenuVO> selMenuList(int i_rest){
+		List<RestaurantRecommendMenuVO> list = new ArrayList();
+		
+		String sql = " SELECT seq, menu_pic FROM t_restaurant_menu "
+				+ " WHERE i_rest = ? ";
+		
+		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
+
+			@Override
+			public void prepared(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, i_rest);
+			}
+
+			@Override
+			public void executeQuery(ResultSet rs) throws SQLException {
+				while(rs.next()) {
+					RestaurantRecommendMenuVO vo = new RestaurantRecommendMenuVO();
+					vo.setSeq(rs.getInt("seq"));
+					vo.setMenu_pic(rs.getString("menu_pic"));
+					list.add(vo);
+				}
+				
+			}
+		});
+		return list;
+	}
+	
+	
+	
 	public List<RestaurantDomain> selRestList(){
 		List<RestaurantDomain> list = new ArrayList();
 		
@@ -161,7 +212,7 @@ public class RestaurantDAO {
 				while(rs.next()) {
 					RestaurantDomain dvo = new RestaurantDomain();
 					dvo.setI_rest(rs.getInt("i_rest"));
-					dvo.setNm(rs.getNString("nm"));
+					dvo.setNm(rs.getString("nm"));
 					dvo.setLat(rs.getDouble("lat"));
 					dvo.setLng(rs.getDouble("lng"));
 					list.add(dvo);

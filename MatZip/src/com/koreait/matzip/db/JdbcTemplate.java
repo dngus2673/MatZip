@@ -18,8 +18,8 @@ public class JdbcTemplate {
 			jdbc.prepared(ps);
 			
 			rs = ps.executeQuery();
-			
 			jdbc.executeQuery(rs);
+			
 		}catch(Exception e) {e.printStackTrace();}
 		finally {DbManager.close(con, ps, rs);}
 	}
