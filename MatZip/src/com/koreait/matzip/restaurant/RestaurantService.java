@@ -67,7 +67,7 @@ public class RestaurantService {
 				if(fileNm != null) {
 					String ext = FileUtils.getExt(fileNm);
 					String saveFileNm = UUID.randomUUID() + ext;
-					part.write(tempPath + "/" + fileNm); //파일 저장
+					part.write(targetPath + "/" + saveFileNm); //파일 저장
 					//part.write(tempPath + File.separator + fileNm); //가능
 					
 					param.setMenu_pic(saveFileNm);
